@@ -24,7 +24,7 @@ public class ArticleController {
     @Autowired
     private ArticleService articleService;
 
-    @Value("${article.hot.limit}")
+    @Value("${article.hotAndNew.limit}")
     private int limit;
 
 
@@ -47,5 +47,14 @@ public class ArticleController {
     @PostMapping("hot")
     public Result hotArticle(){
         return articleService.hotArticle(limit);
+    }
+
+    /**
+     * 最新文章
+     * @return
+     */
+    @PostMapping("new")
+    public Result newArticle(){
+        return  articleService.newArticle(limit);
     }
 }
