@@ -17,4 +17,11 @@ public interface ArticleService {
      * @return
      */
     Result<List<ArticleVo>> listArticle(PageParams pageParams);
+
+    /**
+     * 查询前limit个最热文章
+     * @param limit
+     * @return
+     */
+    Result hotArticle(int limit);
 }

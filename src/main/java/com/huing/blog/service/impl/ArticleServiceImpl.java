@@ -47,20 +47,30 @@ public class ArticleServiceImpl implements ArticleService {
     @Override
     public Result<List<ArticleVo>> listArticle(PageParams pageParams) {
         Page<Article> page = new Page<>(pageParams.getPage(), pageParams.getPageSize());
-        IPage<Article> articleIPage =  articleMapper.listArticle(
+        IPage<Article> articleIPage = articleMapper.listArticle(
                 page,
                 pageParams.getCategoryId(),
                 pageParams.getTagId(),
                 pageParams.getYear(),
                 pageParams.getMonth());
         List<Article> records = articleIPage.getRecords();
-        return Result.success(copyList(records,true,true));
+        return Result.success(copyList(records, true, true));
+    }
+
+    @Override
+    public Result hotArticle(int limit) {
+        LambdaQueryWrapper<Article> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.orderByDesc(Article::getViewCounts);
+        queryWrapper.select(Article::getId, Article::getTitle);
+        queryWrapper.last("limit " + limit);
+        List<Article> articles = articleMapper.selectList(queryWrapper);
+        return Result.success(copyList(articles,false,false));
     }
 
     private List<ArticleVo> copyList(List<Article> records, boolean isTag, boolean isAuthor) {
         List<ArticleVo> articleVoList = new ArrayList<>();
         for (Article record : records) {
-            articleVoList.add(copy(record,isTag,isAuthor,false,false));
+            articleVoList.add(copy(record, isTag, isAuthor, false, false));
         }
         return articleVoList;
     }
@@ -68,27 +78,27 @@ public class ArticleServiceImpl implements ArticleService {
     private ArticleVo copy(Article article, boolean isTag, boolean isAuthor, boolean isBody, boolean isCategory) {
         ArticleVo articleVo = new ArticleVo();
         articleVo.setId(String.valueOf(article.getId()));
-        BeanUtils.copyProperties(article,articleVo);
+        BeanUtils.copyProperties(article, articleVo);
         articleVo.setCreateDate(new DateTime(article.getCreateDate()).toString("yyyy-MM-dd HH:mm"));
 
         //并不是所有的接口，都需要标签，作者信息
-        if (isTag){
+        if (isTag) {
             Long articleId = article.getId();
             articleVo.setTags(tagService.findTagsByArticleId(articleId));
         }
-        if (isAuthor){
+        if (isAuthor) {
             Long authorId = article.getAuthorId();
             SysUser sysUser = sysUserService.findUserById(authorId);
             UserVo userVo = new UserVo();
-            BeanUtils.copyProperties(sysUser,userVo);
+            BeanUtils.copyProperties(sysUser, userVo);
             userVo.setId(String.valueOf(sysUser.getId()));
             articleVo.setAuthor(userVo);
         }
-        if (isBody){
+        if (isBody) {
             Long bodyId = article.getBodyId();
             articleVo.setBody(findarticleBodyByid(bodyId));
         }
-        if (isCategory){
+        if (isCategory) {
             Long categoryId = article.getCategoryId();
             articleVo.setCategory(categoryService.findCategoryById(categoryId));
         }
@@ -101,6 +111,7 @@ public class ArticleServiceImpl implements ArticleService {
 
     /**
      * 根据BodyId查询 文章详情内容
+     *
      * @param bodyId
      * @return
      */
