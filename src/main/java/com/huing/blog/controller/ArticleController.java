@@ -57,4 +57,13 @@ public class ArticleController {
     public Result newArticle(){
         return  articleService.newArticle(limit);
     }
+
+    /**
+     * 首页——文章归档
+     * @return
+     */
+    @PostMapping("listArchives")
+    public Result listArchives(){
+        return articleService.listarchives();
+    }
 }

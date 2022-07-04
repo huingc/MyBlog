@@ -34,4 +34,13 @@
         </where>
         order by weight desc,create_date desc
     </select>
+
+    <!--        List<Archives> listArchives();-->
+    <select id="listArchives" resultType="com.huing.blog.dao.dos.Archives">
+        select year(from_unixtime(create_date / 1000))  year,
+               month(from_unixtime(create_date / 1000)) month,
+               count(*)                                 count
+        from ms_article
+        group by year, month
+    </select>
 </mapper>

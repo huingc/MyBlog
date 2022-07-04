@@ -3,6 +3,7 @@ package com.huing.blog.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.huing.blog.dao.dos.Archives;
 import com.huing.blog.dao.mapper.ArticleBodyMapper;
 import com.huing.blog.dao.mapper.ArticleMapper;
 import com.huing.blog.dao.pojo.Article;
@@ -75,6 +76,12 @@ public class ArticleServiceImpl implements ArticleService {
         queryWrapper.last("limit " + limit);
         List<Article> articles = articleMapper.selectList(queryWrapper);
         return Result.success(copyList(articles,false,false));
+    }
+
+    @Override
+    public Result listarchives() {
+        List<Archives> archivesList = articleMapper.listArchives();
+        return Result.success(archivesList);
     }
 
     private List<ArticleVo> copyList(List<Article> records, boolean isTag, boolean isAuthor) {

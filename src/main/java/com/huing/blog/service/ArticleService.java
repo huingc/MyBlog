@@ -31,4 +31,11 @@ public interface ArticleService {
      * @return
      */
     Result newArticle(int limit);
+
+    /**
+     * 首页-文章归档
+     * SELECT YEAR(FROM_UNIXTIME(create_date/1000)) YEAR,MONTH(FROM_UNIXTIME(create_date/1000)) MONTH, COUNT(*) COUNT FROM ms_article GROUP BY YEAR,MONTH;
+     * @return
+     */
+    Result listarchives();
 }
