@@ -48,4 +48,14 @@ public interface ArticleMapper extends BaseMapper<Article> {
      * @return
      */
     List<Archives> listArchives();
+
+
+
+
+    /**
+     * 更新（浏览量，评论数）
+     * @param article
+     * @return
+     */
+    int updateNumById(Article article);
 }

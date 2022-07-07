@@ -93,7 +93,9 @@ public class ArticleServiceImpl implements ArticleService {
         //查看完文章之后，本应该直接返回数据了，这时候做了一个更新操作，更新时加写锁，阻塞其他的读操作，性能就会比较低（没办法解决，增加阅读数必然要加锁）
         //更新增加了此次接口的耗时（考虑减少耗时）如果一旦更新出问题，不能影响查看操作
         //线程池   可以把更新操作扔到 线程池中去执行和主线程就不相关了
-        threadService.updateArticleViewCount(articleMapper, article);
+        //threadService.updateArticleViewCount(articleMapper, article);
+
+        //在这里我们采用redis  incr自增实现
         return Result.success(articleVo);
     }
 
@@ -151,5 +153,22 @@ public class ArticleServiceImpl implements ArticleService {
         ArticleBodyVo articleBodyVo = new ArticleBodyVo();
         articleBodyVo.setContent(articleBody.getContent());
         return articleBodyVo;
+    }
+
+    @Override
+    public Article getArticleById(Long articleId) {
+        Article article = articleMapper.selectById(articleId);
+        return article;
+    }
+
+    @Override
+    public List<Article> findArticleAll() {
+        List<Article> articleList = articleMapper.selectList(null);
+        return articleList;
+    }
+
+    @Override
+    public Boolean updateNumById(Article article) {
+        return articleMapper.updateNumById(article) > 0;
     }
 }

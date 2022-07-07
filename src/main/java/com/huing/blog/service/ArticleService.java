@@ -1,5 +1,6 @@
 package com.huing.blog.service;
 
+import com.huing.blog.dao.pojo.Article;
 import com.huing.blog.vo.ArticleVo;
 import com.huing.blog.vo.Result;
 import com.huing.blog.vo.params.PageParams;
@@ -45,4 +46,31 @@ public interface ArticleService {
      * @return
      */
     Result findArticleById(Long articleId);
+
+
+
+
+
+
+
+
+
+    /**
+     * 获取文章详情
+     * @param articleId
+     * @return
+     */
+    Article getArticleById(Long articleId);
+
+    /**
+     * 获取所有文章详情
+     * @return
+     */
+    List<Article> findArticleAll();
+
+    /**
+     * 更新（浏览量，评论数）
+     * @param article
+     */
+    Boolean updateNumById(Article article);
 }

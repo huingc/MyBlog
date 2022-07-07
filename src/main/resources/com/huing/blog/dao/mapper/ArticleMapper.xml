@@ -16,6 +16,22 @@
         <result column="category_id" property="categoryId"/>
     </resultMap>
 
+    <!--        int updateNumById(Article article);-->
+    <update id="updateNumById">
+        update ms_article
+        <set>
+            <if test="viewCounts != null">
+                view_counts = #{viewCounts},
+            </if>
+            <if test="commentCounts != null">
+                comment_counts = #{commentCounts}
+            </if>
+        </set>
+        <where>
+            id = #{id}
+        </where>
+    </update>
+
     <!--    IPage<Article> listArticle(Page<Article> page,Long categoryId, Long tagId, String year, String month);-->
     <select id="listArticle" resultMap="articleMap">
         select * from ms_article
