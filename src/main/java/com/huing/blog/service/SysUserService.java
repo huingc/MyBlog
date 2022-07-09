@@ -2,6 +2,7 @@ package com.huing.blog.service;
 
 import com.huing.blog.dao.pojo.SysUser;
 import com.huing.blog.vo.Result;
+import com.huing.blog.vo.UserVo;
 
 /**
  * @author huing
@@ -43,4 +44,11 @@ public interface SysUserService {
      * @param sysUser
      */
     void save(SysUser sysUser);
+
+    /**
+     * 根据id获取uservo对象
+     * @param id
+     * @return
+     */
+    UserVo findUserVoById(Long id);
 }

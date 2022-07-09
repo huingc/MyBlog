@@ -71,7 +71,10 @@ public class ListenHandler {
     public void updateNum() {
         log.info("周期任务开始执行...");
         Set<ZSetOperations.TypedTuple<String>> viewNum = redisUtil.zReverseRangeWithScores("viewNum", 0, -1);
+        Set<ZSetOperations.TypedTuple<String>> commentNum = redisUtil.zReverseRangeWithScores("commentNum", 0, -1);
+
         writeNum(viewNum, VIEW_KEY);
+        writeNum(commentNum, COMMENT_KEY);
         log.info("周期任务执行完毕,redis写入数据库完毕");
     }
 

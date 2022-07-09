@@ -8,6 +8,7 @@ import com.huing.blog.service.SysUserService;
 import com.huing.blog.vo.ErrorCode;
 import com.huing.blog.vo.LoginUserVo;
 import com.huing.blog.vo.Result;
+import com.huing.blog.vo.UserVo;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -80,5 +81,22 @@ public class SysUserServiceImpl implements SysUserService{
         //这个地方 默认生成的id是 分布式id 雪花算法
         //mybatis-plus
         sysUserMapper.insert(sysUser);
+    }
+
+    @Override
+    public UserVo findUserVoById(Long id) {
+
+        SysUser sysUser = sysUserMapper.selectById(id);
+        if (sysUser == null) {
+            sysUser = new SysUser();
+            sysUser.setId(100L);
+            sysUser.setAvatar("/static/img/logo.b3a48c0.png");
+            sysUser.setNickname("huing");
+        }
+        UserVo userVo = new UserVo();
+        BeanUtils.copyProperties(sysUser,userVo);
+        userVo.setId(String.valueOf(sysUser.getId()));
+
+        return userVo;
     }
 }
