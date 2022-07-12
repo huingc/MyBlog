@@ -6,14 +6,15 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.huing.blog.dao.dos.Archives;
 import com.huing.blog.dao.mapper.ArticleBodyMapper;
 import com.huing.blog.dao.mapper.ArticleMapper;
+import com.huing.blog.dao.mapper.ArticleTagMapper;
 import com.huing.blog.dao.pojo.Article;
 import com.huing.blog.dao.pojo.ArticleBody;
+import com.huing.blog.dao.pojo.ArticleTag;
 import com.huing.blog.dao.pojo.SysUser;
 import com.huing.blog.service.*;
-import com.huing.blog.vo.ArticleBodyVo;
-import com.huing.blog.vo.ArticleVo;
-import com.huing.blog.vo.Result;
-import com.huing.blog.vo.UserVo;
+import com.huing.blog.utils.UserThreadLocal;
+import com.huing.blog.vo.*;
+import com.huing.blog.vo.params.ArticleParm;
 import com.huing.blog.vo.params.PageParams;
 import org.joda.time.DateTime;
 import org.springframework.beans.BeanUtils;
@@ -21,7 +22,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author huing
@@ -41,6 +44,9 @@ public class ArticleServiceImpl implements ArticleService {
 
     @Autowired
     private CategoryService categoryService;
+
+    @Autowired
+    private ArticleTagMapper articleTagMapper;
 
     @Override
     public Result<List<ArticleVo>> listArticle(PageParams pageParams) {
@@ -97,6 +103,63 @@ public class ArticleServiceImpl implements ArticleService {
 
         //在这里我们采用redis  incr自增实现
         return Result.success(articleVo);
+    }
+
+    @Override
+    public Result publish(ArticleParm articleParm) {
+        //加入到登录拦截中
+        SysUser sysUser = UserThreadLocal.get();
+        /**
+         * 1.发布文章 目的是构建Article对象
+         * 2.作者id 当前的登录用户
+         * 3.标签 要将标签加入到 关联列表中
+         * 4.body 内容存储 article bodyId
+         */
+        Article article = new Article();
+
+        if (articleParm.getId() != null){
+            article.setId(articleParm.getId());
+            article.setTitle(articleParm.getTitle());
+            article.setSummary(articleParm.getSummary());
+            article.setCategoryId(Long.parseLong(articleParm.getCategory().getId()));
+            articleMapper.insert(article);
+        }else {
+            article = new Article();
+            article.setAuthorId(sysUser.getId());
+            article.setWeight(Article.Article_Common);
+            article.setViewCounts(0);
+            article.setTitle(articleParm.getTitle());
+            article.setSummary(articleParm.getSummary());
+            article.setCommentCounts(0);
+            article.setCreateDate(System.currentTimeMillis());
+            article.setCategoryId(Long.parseLong(articleParm.getCategory().getId()));
+            articleMapper.insert(article);
+        }
+
+        //tag
+        List<TagVo> tags = articleParm.getTags();
+        if (tags != null){
+            for (TagVo tag : tags) {
+                Long articleId = article.getId();
+                ArticleTag articleTag = new ArticleTag();
+                articleTag.setTagId(Long.parseLong(tag.getId()));
+                articleTag.setArticleId(articleId);
+                articleTagMapper.insert(articleTag);
+            }
+        }
+
+        //body
+        ArticleBody articleBody = new ArticleBody();
+        articleBody.setArticleId(article.getId());
+        articleBody.setContent(articleParm.getBody().getContent());
+        articleBody.setContentHtml(articleParm.getBody().getContentHtml());
+        articleBodyMapper.insert(articleBody);
+        article.setBodyId(articleBody.getId());
+        articleMapper.updateById(article);
+
+        Map<String,String> map = new HashMap<>();
+        map.put("id",article.getId().toString());
+        return Result.success(map);
     }
 
     private List<ArticleVo> copyList(List<Article> records, boolean isTag, boolean isAuthor) {

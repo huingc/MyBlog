@@ -3,6 +3,7 @@ package com.huing.blog.controller;
 import com.huing.blog.service.ArticleService;
 import com.huing.blog.vo.ArticleVo;
 import com.huing.blog.vo.Result;
+import com.huing.blog.vo.params.ArticleParm;
 import com.huing.blog.vo.params.PageParams;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -72,5 +73,17 @@ public class ArticleController {
     @PostMapping("view/{id}")
     public Result findArticleById(@PathVariable("id") Long articleId){
         return articleService.findArticleById(articleId);
+    }
+
+    /**
+     * 写文章
+     * @param articleParm
+     * @return
+     */
+    //  @RequestBody主要用来接收前端传递给后端的json字符串中的数据的(请求体中的数据的)；
+    //  而最常用的使用请求体传参的无疑是POST请求了，所以使用@RequestBody接收数据时，一般都用POST方式进行提交。
+    @PostMapping("publish")
+    public Result publish(@RequestBody ArticleParm articleParm){
+        return articleService.publish(articleParm);
     }
 }

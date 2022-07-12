@@ -3,6 +3,7 @@ package com.huing.blog.service;
 import com.huing.blog.dao.pojo.Article;
 import com.huing.blog.vo.ArticleVo;
 import com.huing.blog.vo.Result;
+import com.huing.blog.vo.params.ArticleParm;
 import com.huing.blog.vo.params.PageParams;
 
 import java.util.List;
@@ -47,6 +48,12 @@ public interface ArticleService {
      */
     Result findArticleById(Long articleId);
 
+    /**
+     * 写文章
+     * @param articleParm
+     * @return
+     */
+    Result publish(ArticleParm articleParm);
 
 
 
