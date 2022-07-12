@@ -30,4 +30,13 @@ public class TagsController {
     public Result hot(){
         return tagService.hots(limit);
     }
+
+    /**
+     * 所有标签
+     * @return
+     */
+    @GetMapping
+    public Result findAll(){
+        return tagService.findAll();
+    }
 }

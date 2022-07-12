@@ -22,4 +22,10 @@ public interface TagService {
      * @param limit
      */
     Result hots(int limit);
+
+    /**
+     * 获取所有标签
+     * @return
+     */
+    Result findAll();
 }

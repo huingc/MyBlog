@@ -1,6 +1,7 @@
 package com.huing.blog.service;
 
 import com.huing.blog.vo.CategoryVo;
+import com.huing.blog.vo.Result;
 
 /**
  * @author huing
@@ -13,4 +14,10 @@ public interface CategoryService {
      * @return
      */
     CategoryVo findCategoryById(Long categoryId);
+
+    /**
+     * 查询所有分类
+     * @return
+     */
+    Result findAll();
 }
