@@ -1,5 +1,6 @@
 package com.huing.blog.controller;
 
+import com.huing.blog.common.aop.LogAnnotation;
 import com.huing.blog.service.ArticleService;
 import com.huing.blog.vo.ArticleVo;
 import com.huing.blog.vo.Result;
@@ -33,8 +34,9 @@ public class ArticleController {
      * @return
      */
     @PostMapping()
+    //加上此注解，代表对此接口记录日志
+    @LogAnnotation(module="文章",operation="获取文章列表")
     public Result<List<ArticleVo>> listArticle(@RequestBody PageParams pageParams) {
-
         return articleService.listArticle(pageParams);
     }
 
