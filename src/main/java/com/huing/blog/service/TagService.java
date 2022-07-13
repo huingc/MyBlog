@@ -28,4 +28,10 @@ public interface TagService {
      * @return
      */
     Result findAll();
+
+    /**
+     * 查询所有标签
+     * @return
+     */
+    Result findAllDetail();
 }

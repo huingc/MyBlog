@@ -26,4 +26,13 @@ public class CategoryController {
     public Result categories() {
         return categoryService.findAll();
     }
+
+    /**
+     * 查询所有文章分类
+     * @return
+     */
+    @GetMapping("detail")
+    public Result detail(){
+        return categoryService.findAllDetail();
+    }
 }

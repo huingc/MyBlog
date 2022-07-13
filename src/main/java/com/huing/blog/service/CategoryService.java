@@ -20,4 +20,10 @@ public interface CategoryService {
      * @return
      */
     Result findAll();
+
+    /**
+     * 查询所有文章分类
+     * @return
+     */
+    Result findAllDetail();
 }

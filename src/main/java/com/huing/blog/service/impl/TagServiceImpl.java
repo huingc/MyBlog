@@ -60,6 +60,12 @@ public class TagServiceImpl implements TagService {
         return Result.success(copyList(tagList));
     }
 
+    @Override
+    public Result findAllDetail() {
+        List<Tag> tagList = tagMapper.selectList(null);
+        return Result.success(copyList(tagList));
+    }
+
     private List<TagVo> copyList(List<Tag> tags) {
         List<TagVo> tagVoList = new ArrayList<>();
 
