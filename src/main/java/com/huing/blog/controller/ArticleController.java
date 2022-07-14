@@ -1,6 +1,7 @@
 package com.huing.blog.controller;
 
 import com.huing.blog.common.aop.LogAnnotation;
+import com.huing.blog.common.cache.Cache;
 import com.huing.blog.service.ArticleService;
 import com.huing.blog.vo.ArticleVo;
 import com.huing.blog.vo.Result;
@@ -45,6 +46,7 @@ public class ArticleController {
      * @return
      */
     @PostMapping("hot")
+    @Cache(expire = 5 * 60 * 1000,name = "hot_article")
     public Result hotArticle(){
         return articleService.hotArticle(limit);
     }

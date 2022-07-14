@@ -26,6 +26,7 @@ public class LogAspect {
     /**
      * 切点
      */
+    //切点，注解加在那里，那里就是切点
     @Pointcut("@annotation(com.huing.blog.common.aop.LogAnnotation)")
     public void pt(){}
 
