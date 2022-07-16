@@ -122,7 +122,7 @@ public class ArticleServiceImpl implements ArticleService {
             article.setTitle(articleParm.getTitle());
             article.setSummary(articleParm.getSummary());
             article.setCategoryId(Long.parseLong(articleParm.getCategory().getId()));
-            articleMapper.insert(article);
+            articleMapper.updateById(article);
         }else {
             article = new Article();
             article.setAuthorId(sysUser.getId());
